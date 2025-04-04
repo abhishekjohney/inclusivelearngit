@@ -63,21 +63,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return 'student' as UserRole;
           }
           
-          // Create user profile
-          const { error: insertError } = await supabase
-            .from('user_profiles')
-            .insert([
-              { 
-                id: userId,
-                email: userData.user.email,
-                role: 'student'
+          // Create user profile with a delay to avoid race conditions
+          setTimeout(async () => {
+            try {
+              console.log("Attempting to create user profile for:", userId);
+              const { error: insertError } = await supabase
+                .from('user_profiles')
+                .insert([
+                  { 
+                    id: userId,
+                    email: userData.user.email,
+                    role: 'student'
+                  }
+                ]);
+              
+              if (insertError) {
+                console.error("Error creating user profile:", insertError);
+                // If we get a duplicate key error, the profile was created by the trigger
+                if (insertError.code === '23505') {
+                  console.log("Profile already exists (created by trigger)");
+                }
+              } else {
+                console.log("User profile created successfully");
               }
-            ]);
-          
-          if (insertError) {
-            console.error("Error creating user profile:", insertError);
-            return 'student' as UserRole;
-          }
+            } catch (profileError) {
+              console.error("Exception creating user profile:", profileError);
+            }
+          }, 2000); // Increased delay to 2 seconds
           
           return 'student' as UserRole;
         }
@@ -238,35 +250,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
       
       if (data.user) {
-        try {
-          // Create a user profile with the specified role
-          const { error: profileError } = await supabase
-            .from('user_profiles')
-            .insert([
-              { 
-                id: data.user.id,
-                email: data.user.email,
-                role: role
-              }
-            ]);
-          
-          if (profileError) {
-            console.error("Error creating user profile:", profileError);
-            
-            // If the table doesn't exist, we'll just log the error
-            // The fetchUserRole function will handle this case
-            if (profileError.code === '42P01') {
-              console.log("user_profiles table doesn't exist, will be created when needed");
-            }
-          } else {
-            console.log("User profile created with role:", role);
-            // Set the user role immediately after creating the profile
-            setUserRole(role);
-          }
-        } catch (profileError) {
-          console.error("Exception creating user profile:", profileError);
-          // Continue with signup even if profile creation fails
-        }
+        // We'll let the trigger handle profile creation instead of doing it here
+        // This avoids race conditions and database errors
+        console.log("User created successfully:", data.user.id);
+        
+        // Set the user role in state for immediate use
+        setUserRole(role);
       }
       
       toast({

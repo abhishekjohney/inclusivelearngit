@@ -74,7 +74,18 @@ const Auth = () => {
       // Switch to signin tab
       setActiveTab("signin");
     } catch (error: any) {
-      setError(error.message);
+      console.error("Signup error:", error);
+      
+      // Provide more specific error messages
+      if (error.message.includes("Database error")) {
+        setError("There was a problem creating your account. Please try again later.");
+      } else if (error.message.includes("already registered")) {
+        setError("This email is already registered. Please sign in instead.");
+        setActiveTab("signin");
+      } else {
+        setError(error.message || "Failed to create account. Please try again.");
+      }
+      
       toast({
         variant: "destructive",
         title: "Sign Up Failed",

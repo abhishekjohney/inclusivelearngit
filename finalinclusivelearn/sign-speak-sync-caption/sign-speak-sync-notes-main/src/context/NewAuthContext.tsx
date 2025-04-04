@@ -248,13 +248,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       console.log("Starting sign out process");
       setIsLoading(true);
-      
-      // First, clear the local state
-      setSession(null);
-      setUser(null);
-      setUserRole(null);
-      
-      // Then call Supabase signOut
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -262,10 +255,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw error;
       }
       
-      console.log("Supabase sign out successful");
-      
-      // Force a page reload to clear any cached state
-      window.location.href = '/';
+      console.log("Supabase sign out successful, cleaning up state");
+      // Explicitly set user and session to null
+      setSession(null);
+      setUser(null);
+      setUserRole(null);
       
       toast({
         title: "Success",
@@ -306,4 +300,4 @@ export const useAuth = () => {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-};
+}; 

@@ -32,10 +32,10 @@ const LandingPage = () => {
                 ) : (
                   <>
                     <Button className="bg-ocean-blue hover:bg-blue-600 text-white" asChild>
-                      <Link to="/auth">Sign In to Get Started</Link>
+                      <Link to="/auth?tab=signin">Sign In</Link>
                     </Button>
                     <Button variant="outline" className="border-ocean-blue text-ocean-blue hover:bg-soft-blue" asChild>
-                      <Link to="/signup">Create Account</Link>
+                      <Link to="/auth?tab=signup">Create Account</Link>
                     </Button>
                   </>
                 )}
@@ -160,10 +160,10 @@ const LandingPage = () => {
           ) : (
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Button className="bg-white text-ocean-blue hover:bg-gray-100" size="lg" asChild>
-                <Link to="/auth">Sign In</Link>
+                <Link to="/auth?tab=signin">Sign In</Link>
               </Button>
               <Button className="bg-transparent border-2 border-white text-white hover:bg-white/10" size="lg" asChild>
-                <Link to="/signup">Create Account</Link>
+                <Link to="/auth?tab=signup">Create Account</Link>
               </Button>
             </div>
           )}

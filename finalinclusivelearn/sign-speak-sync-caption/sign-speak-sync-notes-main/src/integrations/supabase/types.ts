@@ -45,6 +45,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          role: string | null
           updated_at: string
         }
         Insert: {
@@ -52,6 +53,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          role?: string | null
           updated_at?: string
         }
         Update: {
@@ -59,6 +61,31 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          id: string
+          email: string
+          role: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          email: string
+          role: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          role?: string
+          created_at?: string
           updated_at?: string
         }
         Relationships: []

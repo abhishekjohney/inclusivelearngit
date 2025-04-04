@@ -10,7 +10,9 @@ import SignUp from "./pages/SignUp";
 import SignTranslator from "./pages/SignTranslator";
 import VideoCaptioning from "./pages/VideoCaptioning";
 import Notes from "./pages/Notes";
+import Students from "./pages/Students";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
             <Route path="/sign-translator" element={<SignTranslator />} />
             <Route path="/video-captioning" element={<VideoCaptioning />} />
             <Route path="/notes" element={<Notes />} />
+            <Route path="/students" element={<Students />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

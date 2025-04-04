@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
@@ -7,14 +6,15 @@ import {
   Headphones,
   Menu,
   X,
-  LogOut
+  LogOut,
+  LogIn
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -26,9 +26,23 @@ const Header = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
+    try {
+      await signOut();
+      // Force a small delay to ensure state updates before navigation
+      setTimeout(() => {
+        navigate("/");
+      }, 100);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
+
+  // Close mobile menu when user signs out
+  useEffect(() => {
+    if (!user && isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [user, isMenuOpen]);
 
   return (
     <header className="w-full bg-white shadow-sm py-4">
@@ -60,15 +74,17 @@ const Header = () => {
               variant="outline" 
               className="border-red-500 text-red-500 hover:bg-red-50"
               onClick={handleSignOut}
+              disabled={isLoading}
             >
               <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
+              {isLoading ? "Signing out..." : "Sign Out"}
             </Button>
           ) : (
             <Button 
               className="bg-ocean-blue hover:bg-blue-600 text-white"
               onClick={handleSignIn}
             >
+              <LogIn className="w-4 h-4 mr-2" />
               Sign In
             </Button>
           )}
@@ -121,9 +137,10 @@ const Header = () => {
                   handleSignOut();
                   setIsMenuOpen(false);
                 }}
+                disabled={isLoading}
               >
                 <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
+                {isLoading ? "Signing out..." : "Sign Out"}
               </Button>
             ) : (
               <Button 
@@ -133,6 +150,7 @@ const Header = () => {
                   setIsMenuOpen(false);
                 }}
               >
+                <LogIn className="w-4 h-4 mr-2" />
                 Sign In
               </Button>
             )}

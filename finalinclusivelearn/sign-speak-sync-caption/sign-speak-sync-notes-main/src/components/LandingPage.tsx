@@ -1,9 +1,11 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Monitor, FileText, Headphones } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const LandingPage = () => {
+  const { user } = useAuth();
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -18,12 +20,25 @@ const LandingPage = () => {
                 SignSpeakSync translates sign language, captions videos, and saves lecture notes in one easy-to-use platform.
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <Button className="bg-ocean-blue hover:bg-blue-600 text-white" asChild>
-                  <Link to="/sign-translator">Try Sign Translator</Link>
-                </Button>
-                <Button variant="outline" className="border-ocean-blue text-ocean-blue hover:bg-soft-blue" asChild>
-                  <Link to="/video-captioning">Caption Videos</Link>
-                </Button>
+                {user ? (
+                  <>
+                    <Button className="bg-ocean-blue hover:bg-blue-600 text-white" asChild>
+                      <Link to="/sign-translator">Try Sign Translator</Link>
+                    </Button>
+                    <Button variant="outline" className="border-ocean-blue text-ocean-blue hover:bg-soft-blue" asChild>
+                      <Link to="/video-captioning">Caption Videos</Link>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button className="bg-ocean-blue hover:bg-blue-600 text-white" asChild>
+                      <Link to="/auth">Sign In to Get Started</Link>
+                    </Button>
+                    <Button variant="outline" className="border-ocean-blue text-ocean-blue hover:bg-soft-blue" asChild>
+                      <Link to="/signup">Create Account</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
             <div className="md:w-1/2 flex justify-center">
@@ -138,9 +153,20 @@ const LandingPage = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Join thousands of users breaking communication barriers with SignSpeakSync.
           </p>
-          <Button className="bg-white text-ocean-blue hover:bg-gray-100" size="lg" asChild>
-            <Link to="/sign-translator">Try It Free</Link>
-          </Button>
+          {user ? (
+            <Button className="bg-white text-ocean-blue hover:bg-gray-100" size="lg" asChild>
+              <Link to="/sign-translator">Try It Now</Link>
+            </Button>
+          ) : (
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <Button className="bg-white text-ocean-blue hover:bg-gray-100" size="lg" asChild>
+                <Link to="/auth">Sign In</Link>
+              </Button>
+              <Button className="bg-transparent border-2 border-white text-white hover:bg-white/10" size="lg" asChild>
+                <Link to="/signup">Create Account</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
     </div>

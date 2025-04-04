@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@google-cloud/speech": "^7.0.1",
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/hands": "^0.4.1675469240",
+    "@vitejs/plugin-react-swc": "^3.8.1",
+    "vite": "^6.2.5"
+  }
+}
